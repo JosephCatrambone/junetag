@@ -1,4 +1,4 @@
-junetag: A Pure-Rust Implementation of AprilTag 3. 
+junetag: A Pure-Rust Implementation of AprilTag 2. 
 ---
 
 This is entirely a learning project.  I would not recommend using it for anything.

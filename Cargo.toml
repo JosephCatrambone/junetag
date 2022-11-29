@@ -1,17 +1,14 @@
-[workspace]
-members = [
-]
 [package]
-name = "c2rust_out"
-authors = ["C2Rust"]
-version = "0.0.0"
+name = "junetag"
+version = "0.1.0"
+edition = "2021"
+authors = ["Joseph Catrambone <jo.jcat@gmail.com>"]
 publish = false
-edition = "2018"
 autobins = false
 
 [lib]
-name = "c2rust_out"
-path = "c2rust-lib.rs"
 crate-type = ["staticlib", "rlib"]
+
 [dependencies]
-libc= "0.2"
+image = "~0.24"
+rayon = "1.6"
