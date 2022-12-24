@@ -5,6 +5,10 @@ use image::io::Reader as ImageReader;
 use image::Luma;
 use rayon::prelude::*;
 
+const BLACK_PX: u8 = 0;
+const WHITE_PX: u8 = 255;
+const GREY_PX: u8 = 127;
+
 /// Instead of computing the exact extrema (max and min
 /// values) around every pixel, we divide the image into tiles
 /// of 4x4 pixels and compute the extrema within each tile. To
@@ -38,8 +42,8 @@ fn adaptive_threshold_original(image_view: &dyn GenericImageView<Pixel=Luma<u8>>
 	// Pre-fill tile mins.
 	for tile_y in 0..height_in_tiles {
 		for tile_x in 0..width_in_tiles {
-			*tile_min.get_pixel_mut(tile_x, tile_y) = Luma([255]);
-			*tile_max.get_pixel_mut(tile_x, tile_y) = Luma([0]);
+			*tile_min.get_pixel_mut(tile_x, tile_y) = Luma([WHITE_PX]);
+			*tile_max.get_pixel_mut(tile_x, tile_y) = Luma([BLACK_PX]);
 		}
 	}
 
@@ -47,8 +51,8 @@ fn adaptive_threshold_original(image_view: &dyn GenericImageView<Pixel=Luma<u8>>
 	//let mut par_iter = (0..width_in_tiles*height_in_tiles).into_par_iter().map(|idx| {
 	for tile_y in 0..height_in_tiles {
 		for tile_x in 0..width_in_tiles {
-			let mut local_tile_max = 0u8;
-			let mut local_tile_min = 255u8;
+			let mut local_tile_max = BLACK_PX;
+			let mut local_tile_min = WHITE_PX;
 			for pixel_offset_y in 0..tile_size {
 				for pixel_offset_x in 0..tile_size {
 					let pixel_x = tile_x*tile_size + pixel_offset_x;
@@ -69,8 +73,8 @@ fn adaptive_threshold_original(image_view: &dyn GenericImageView<Pixel=Luma<u8>>
 	let mut blurred_tile_max = GrayImage::new(width_in_tiles, height_in_tiles);
 	for tile_y in 0..height_in_tiles {
 		for tile_x in 0..width_in_tiles {
-			let mut conv_min = 255;
-			let mut conv_max = 0;
+			let mut conv_min = WHITE_PX;
+			let mut conv_max = BLACK_PX;
 			for dy in &[-1i32, 0, 1] {
 				for dx in &[-1i32, 0, 1] {
 					let x = tile_x as i32 + dx;
@@ -94,7 +98,7 @@ fn adaptive_threshold_original(image_view: &dyn GenericImageView<Pixel=Luma<u8>>
 			let adaptive_max = blurred_tile_max.get_pixel(x/tile_size, y/tile_size)[0];
 			let mut p = result.get_pixel_mut(x, y);
 			if adaptive_max.abs_diff(adaptive_min) < min_contrast {
-				*p = Luma([127u8]);
+				*p = Luma([GREY_PX]);
 				continue;
 			}
 
@@ -102,9 +106,9 @@ fn adaptive_threshold_original(image_view: &dyn GenericImageView<Pixel=Luma<u8>>
 			let threshold = (adaptive_min as u16 + ((adaptive_max as u16 + adaptive_min as u16)/2)) as u8;
 
 			if image_view.get_pixel(x, y)[0] <= threshold {
-				*p = Luma([0u8]);
+				*p = Luma([BLACK_PX]);
 			} else {
-				*p = Luma([255u8]);
+				*p = Luma([WHITE_PX]);
 			}
 		}
 	}
