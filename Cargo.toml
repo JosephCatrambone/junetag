@@ -10,5 +10,16 @@ autobins = false
 crate-type = ["staticlib", "rlib"]
 
 [dependencies]
+glam = "~0.22"
 image = "~0.24"
+# Giving up on nalgebra.
+#nalgebra = "~0.31"
+#nalgebra-glm = { version="0.17.0", features=["default",] }  # Serde?  Mint for math interop?
 rayon = "1.6"
+
+[dev-dependencies]
+# For the examples.
+minifb = "0.23"
+
+[build-dependencies]
+# For build-rs.
