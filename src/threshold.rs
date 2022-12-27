@@ -28,7 +28,7 @@ const GREY_PX: u8 = 127;
 /// pixel box.  We'll duplicate the structure of the original code, where they first iterate over
 /// superpixels (tiles) of size 4x4, then go over these again and use a full convolution of +/- 1
 /// superpixel for thresholding.
-fn adaptive_threshold_original(image_view: &dyn GenericImageView<Pixel=Luma<u8>>, tile_size: u32, min_contrast: u8) -> GrayImage {
+pub fn adaptive_threshold_original(image_view: &dyn GenericImageView<Pixel=Luma<u8>>, tile_size: u32, min_contrast: u8) -> GrayImage {
 	let mut result = GrayImage::new(image_view.width(), image_view.height());
 
 	let width = image_view.width();

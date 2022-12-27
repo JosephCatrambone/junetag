@@ -22,7 +22,7 @@ use image::{GenericImageView, Luma};
 /// a single pixel-wide white component separating two distinct
 /// black components, we have solved the problem by allowing
 /// the same white pixels to appear in both resulting clusters.
-fn boundary_segmentation(threshold_image: &dyn GenericImageView<Pixel=Luma<u8>>) -> Vec<usize> {
+pub fn boundary_segmentation(threshold_image: &dyn GenericImageView<Pixel=Luma<u8>>) -> Vec<usize> {
 	let num_pixels = (threshold_image.width() * threshold_image.height()) as usize;
 	let mut boundary_point_group_assignment = Vec::with_capacity(num_pixels);
 	// Fill boundary_point_group_assignment with '0'.
@@ -60,7 +60,7 @@ fn boundary_segmentation(threshold_image: &dyn GenericImageView<Pixel=Luma<u8>>)
 /// make the smallest distinct assignment, [0, 1, 2, 3, 4, 4, 5, 5, 5, ...]
 /// returns both the new assignment and the largest value in the new assignment.
 /// Assumes that boundary_segmentation has been run, but won't freak out for an arbitrary list.
-fn compact_boundary_segmentation(assignment: &Vec<usize>) -> (Vec<usize>, usize) {
+pub fn compact_boundary_segmentation(assignment: &Vec<usize>) -> (Vec<usize>, usize) {
 	// TODO: HashMap is using a cryptographically robust one and we don't need that.
 	let mut mapping = HashMap::with_capacity(assignment.len());  // This is way oversized.
 	let mut remapped: Vec<usize> = Vec::with_capacity(assignment.len());

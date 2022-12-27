@@ -1,7 +1,6 @@
 
 use glam::Vec3;
 use minifb::{Key, Window, WindowOptions};
-use minifb::Key::H;
 
 use junetag::*;
 

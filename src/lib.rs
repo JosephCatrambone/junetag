@@ -1,4 +1,5 @@
 use glam::{Quat, UVec2, UVec4, Vec3};
+use image::{DynamicImage, GrayImage};
 
 pub mod camera;
 pub mod threshold;
@@ -72,12 +73,22 @@ impl From<Detection> for CDetection {
 
 // Our internal structure, more rusty.
 #[derive(Default)]
-struct Detection {
+pub struct Detection {
 	image_rect: UVec4,
 	quad_corners: [UVec2; 4], // Four points in the quad.
 	translation: Vec3,
 	rotation: Quat,
 	marker_id: u32,
+}
+
+pub fn detect(image_data: &[u8], width: usize) -> Vec<Detection> {
+	let height = image_data.len() / width;
+	let img = GrayImage::from_vec(width.try_into().unwrap(), height.try_into().unwrap(), image_data.to_vec()).unwrap();
+	let thresholded = threshold::adaptive_threshold_original(&img, 5, 10);
+
+	let regions = unionfind::boundary_segmentation(&thresholded);
+
+	vec![]
 }
 
 

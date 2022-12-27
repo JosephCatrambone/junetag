@@ -20,6 +20,11 @@ rayon = "1.6"
 [dev-dependencies]
 # For the examples.
 minifb = "0.23"
+nokhwa = { version = "~0.10", features=["input-native", "output-threaded"] }  # output-wgpu?  input-opencv?
+
+#[dev-dependencies.nokhwa]
+#version = "0.10.2"
+#features = ["input-native", "output-threaded"]
 
 [build-dependencies]
 # For build-rs.
